@@ -1,17 +1,33 @@
-import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "./assets/vite.svg";
 import betterAuthLogo from "./assets/better-auth.svg";
 import convexLogo from "./assets/convex.svg";
 import heroImg from "./assets/hero.png";
 import "./App.css";
+import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
 import AuthForm from "./components/AuthForm";
+import Welcome from "./components/Welcome";
 
 function App() {
-  const [count, setCount] = useState(0);
+  // return (
+  //   <>
+  //   <Welcome />
+  //   </>
+  // )
 
   return (
     <>
+      <AuthLoading>
+        <div className="auth-loading">
+          <div className="auth-loading-spinner" />
+        </div>
+      </AuthLoading>
+
+      <Authenticated>
+        <Welcome />
+      </Authenticated>
+
+      <Unauthenticated>
       <div id="layout">
         <div id="column-left">
           <section id="center">
@@ -155,6 +171,7 @@ function App() {
           <AuthForm />
         </div>
       </div>
+      </Unauthenticated>
     </>
   );
 }
