@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { authClient } from "../lib/auth-client";
 
 export default function AuthForm() {
   const [mode, setMode] = useState<"signIn" | "signUp">("signIn");
@@ -6,13 +7,41 @@ export default function AuthForm() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [loading] = useState(false);
-//   const [googleLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    try {
+      if (mode === "signIn") {
+        const { error: err } = await authClient.signIn.email({ email, password });
+        if (err) setError(err.message ?? "Sign in failed");
+      } else {
+        const { error: err } = await authClient.signUp.email({ email, password, name });
+        if (err) setError(err.message ?? "Sign up failed");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError(null);
+    setGoogleLoading(true);
+    try {
+      const { error: err } = await authClient.signIn.social({ provider: "google" });
+      if (err) setError(err.message ?? "Google sign in failed");
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
 
   return (
     <div className="auth-form-wrapper">
       <h2>{mode === "signIn" ? "Sign In" : "Sign Up"}</h2>
-      <form className="auth-form">
+      <form className="auth-form" onSubmit={handleSubmit}>
         {mode === "signUp" && (
           <input
             type="text"
@@ -57,7 +86,7 @@ export default function AuthForm() {
       </p>
       <div className="auth-form-divider">or</div>
 
-      <button className="gsi-material-button">
+      <button className="gsi-material-button" type="button" onClick={handleGoogleSignIn} disabled={googleLoading}>
         <div className="gsi-material-button-state"></div>
         <div className="gsi-material-button-content-wrapper">
           <div className="gsi-material-button-icon">
