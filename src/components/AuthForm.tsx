@@ -32,7 +32,7 @@ export default function AuthForm() {
     setError(null);
     setGoogleLoading(true);
     try {
-      const { error: err } = await authClient.signIn.social({ provider: "google" });
+      const { error: err } = await authClient.signIn.social({ provider: "google", callbackURL: "/" });
       if (err) setError(err.message ?? "Google sign in failed");
     } finally {
       setGoogleLoading(false);
