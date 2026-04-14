@@ -619,45 +619,247 @@
   }
 }
 
-/* Welcome */
+/* Welcome / App shell */
 #welcome-layout {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
   min-height: 100svh;
-  padding: 64px 20px;
-  box-sizing: border-box;
 }
 
-#welcome-center {
+.app-header {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 40px;
-  max-width: 600px;
-  width: 100%;
+  justify-content: space-between;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 10;
 }
 
-.welcome-content {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-
-  h1 {
-    text-align: center;
-    margin: 0;
-  }
-}
-
-.welcome-subtitle {
+.app-header-user {
+  font-size: 15px;
   color: var(--text);
-  font-size: 16px;
 }
 
 .welcome-signout {
-  margin-top: 8px;
   width: auto;
-  padding: 10px 28px;
+  padding: 8px 20px;
+  font-size: 14px;
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 40px 24px 80px;
+  box-sizing: border-box;
+}
+
+/* Habit Tracker */
+.tracker {
+  width: 100%;
+  max-width: 860px;
+}
+
+.tracker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 32px;
+
+  h1 {
+    margin: 0;
+    font-size: 24px;
+  }
+}
+
+.add-habit-form {
+  display: flex;
+  gap: 8px;
+}
+
+.add-habit-input {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  min-width: 180px;
+
+  &::placeholder {
+    color: var(--text);
+  }
+
+  &:focus {
+    border-color: var(--accent-border);
+  }
+}
+
+.add-habit-btn {
+  padding: 8px 16px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    opacity: 0.88;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.tracker-loading {
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+.tracker-empty {
+  color: var(--text);
+  text-align: center;
+  margin-top: 60px;
+  font-size: 16px;
+}
+
+.habit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.habit-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.habit-row-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.habit-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-h);
+}
+
+.habit-stats {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.habit-count {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.habit-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+
+  &:hover {
+    color: #e53e3e;
+    background: rgba(229, 62, 62, 0.08);
+  }
+}
+
+.habit-grid-wrapper {
+  display: flex;
+  gap: 4px;
+  align-items: flex-start;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.day-labels {
+  display: grid;
+  grid-template-rows: repeat(7, 13px);
+  gap: 3px;
+  padding-top: 1px;
+
+  span {
+    font-size: 9px;
+    color: var(--text);
+    line-height: 13px;
+    text-align: right;
+    padding-right: 4px;
+    user-select: none;
+  }
+}
+
+.habit-grid {
+  display: grid;
+  grid-template-rows: repeat(7, 13px);
+  grid-auto-flow: column;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.habit-cell {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  background: var(--accent-bg);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s, transform 0.1s;
+
+  &:hover:not(:disabled) {
+    transform: scale(1.15);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  &.done {
+    background: #2da44e;
+  }
+
+  &.today {
+    outline: 2px solid var(--accent-border);
+    outline-offset: 1px;
+  }
+
+  &.future {
+    opacity: 0.25;
+    cursor: default;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .habit-cell.done {
+    background: #3fb950;
+  }
 }
